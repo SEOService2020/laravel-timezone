@@ -1,9 +1,10 @@
 <?php
 
-namespace JamesMills\LaravelTimezone\Listeners\Auth;
+namespace SEOService2020\LaravelTimezone\Listeners\Auth;
 
 use Illuminate\Auth\Events\Login;
 use Illuminate\Support\Facades\Auth;
+
 use Laravel\Passport\Events\AccessTokenCreated;
 use Torann\GeoIP\Location;
 
@@ -103,8 +104,8 @@ class UpdateUsersTimezone
     }
 
     /**
-    * @return mixed
-    */
+     * @return mixed
+     */
     private function getFromLookup()
     {
         $result = null;

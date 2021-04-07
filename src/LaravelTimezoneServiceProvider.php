@@ -1,12 +1,13 @@
 <?php
 
-namespace JamesMills\LaravelTimezone;
+namespace SEOService2020\LaravelTimezone;
 
 use Illuminate\Foundation\AliasLoader;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
-use JamesMills\LaravelTimezone\Listeners\Auth\UpdateUsersTimezone;
+
+use SEOService2020\LaravelTimezone\Listeners\Auth\UpdateUsersTimezone;
 
 class LaravelTimezoneServiceProvider extends ServiceProvider
 {
@@ -26,14 +27,14 @@ class LaravelTimezoneServiceProvider extends ServiceProvider
     public function boot()
     {
         // Allow migrations publish
-        if (! class_exists('AddTimezoneColumnToUsersTable')) {
+        if (!class_exists('AddTimezoneColumnToUsersTable')) {
             $this->publishes([
                 __DIR__ . '/database/migrations/add_timezone_column_to_users_table.php.stub' => database_path('/migrations/' . date('Y_m_d_His') . '_add_timezone_column_to_users_table.php'),
             ], 'migrations');
         }
 
         // Register the Timezone alias
-        AliasLoader::getInstance()->alias('Timezone', \JamesMills\LaravelTimezone\Facades\Timezone::class);
+        AliasLoader::getInstance()->alias('Timezone', \SEOService2020\LaravelTimezone\Facades\Timezone::class);
 
         // Register an event listener
         $this->registerEventListener();

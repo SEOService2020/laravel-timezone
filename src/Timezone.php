@@ -1,6 +1,6 @@
 <?php
 
-namespace JamesMills\LaravelTimezone;
+namespace SEOService2020\LaravelTimezone;
 
 use Carbon\Carbon;
 
@@ -12,7 +12,7 @@ class Timezone
      * @param  bool  $format_timezone
      * @return string
      */
-    public function convertToLocal(?Carbon $date, $format = null, $format_timezone = false) : string
+    public function convertToLocal(?Carbon $date, $format = null, $format_timezone = false): string
     {
         if (is_null($date)) {
             return 'Empty';
@@ -39,7 +39,7 @@ class Timezone
      * @param $date
      * @return Carbon\Carbon
      */
-    public function convertFromLocal($date) : Carbon
+    public function convertFromLocal($date): Carbon
     {
         return Carbon::parse($date, auth()->user()->timezone)->setTimezone('UTC');
     }
@@ -48,7 +48,7 @@ class Timezone
      * @param  Carbon\Carbon  $date
      * @return string
      */
-    private function formatTimezone(Carbon $date) : string
+    private function formatTimezone(Carbon $date): string
     {
         $timezone = $date->format('e');
         $parts = explode('/', $timezone);
