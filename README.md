@@ -43,7 +43,7 @@ composer require seoservice2020/laravel-timezone
 Publish database migrations
 
 ```bash
-php artisan vendor:publish --provider="SEOService2020\LaravelTimezone\LaravelTimezoneServiceProvider" --tag=migrations
+php artisan vendor:publish --provider="SEOService2020\Timezone\TimezoneServiceProvider" --tag=migrations
 ```
 
 Run the database migrations. This will add a `timezone` column to your `users` table.
@@ -106,7 +106,7 @@ $post = Post::create([
 Publishing the config file is optional.
 
 ```php
-php artisan vendor:publish --provider="SEOService2020\LaravelTimezone\LaravelTimezoneServiceProvider" --tag=config
+php artisan vendor:publish --provider="SEOService2020\Timezone\TimezoneServiceProvider" --tag=config
 ```
 
 ### Flash Messages

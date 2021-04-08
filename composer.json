@@ -23,15 +23,15 @@
     },
     "autoload": {
         "psr-4": {
-            "SEOService2020\\LaravelTimezone\\": "src/",
-            "SEOService2020\\LaravelTimezone\\Database\\Seeds\\": "database/seeds/"
+            "SEOService2020\\Timezone\\": "src/",
+            "SEOService2020\\Timezone\\Database\\Seeds\\": "database/seeds/"
 
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "SEOService2020\\LaravelTimezone\\LaravelTimezoneServiceProvider"
+                "SEOService2020\\Timezone\\TimezoneServiceProvider"
             ]
         }
     },

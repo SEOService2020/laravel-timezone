@@ -1,6 +1,6 @@
 <?php
 
-namespace SEOService2020\LaravelTimezone\Listeners\Auth;
+namespace SEOService2020\Timezone\Listeners\Auth;
 
 use Illuminate\Auth\Events\Login;
 use Illuminate\Support\Facades\Auth;
@@ -62,7 +62,7 @@ class UpdateUsersTimezone
     }
 
     /**
-     * @param  Location  $geoip_info
+     * @param Location $geoip_info
      */
     private function notify(Location $geoip_info)
     {

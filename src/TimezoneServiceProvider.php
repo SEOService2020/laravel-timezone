@@ -1,15 +1,15 @@
 <?php
 
-namespace SEOService2020\LaravelTimezone;
+namespace SEOService2020\Timezone;
 
 use Illuminate\Foundation\AliasLoader;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 
-use SEOService2020\LaravelTimezone\Listeners\Auth\UpdateUsersTimezone;
+use SEOService2020\Timezone\Listeners\Auth\UpdateUsersTimezone;
 
-class LaravelTimezoneServiceProvider extends ServiceProvider
+class TimezoneServiceProvider extends ServiceProvider
 {
     /**
      * Indicates if loading of the provider is deferred.
@@ -34,7 +34,7 @@ class LaravelTimezoneServiceProvider extends ServiceProvider
         }
 
         // Register the Timezone alias
-        AliasLoader::getInstance()->alias('Timezone', \SEOService2020\LaravelTimezone\Facades\Timezone::class);
+        AliasLoader::getInstance()->alias('Timezone', \SEOService2020\Timezone\Facades\Timezone::class);
 
         // Register an event listener
         $this->registerEventListener();

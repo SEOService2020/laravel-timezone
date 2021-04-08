@@ -1,6 +1,6 @@
 <?php
 
-namespace SEOService2020\LaravelTimezone;
+namespace SEOService2020\Timezone;
 
 use Carbon\Carbon;
 
