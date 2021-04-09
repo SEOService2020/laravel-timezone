@@ -40,7 +40,11 @@ Or use our nice blade directive
 composer require seoservice2020/laravel-timezone
 ```
 
-### Publish database migrations
+### Default timezone attributes location
+
+By default, timezone attributes placed into `users` table. If you wish to use package with this default, see instructions below.
+
+#### Publish database migrations
 
 ```bash
 php artisan vendor:publish --provider="SEOService2020\Timezone\TimezoneServiceProvider" --tag=migrations
@@ -52,7 +56,7 @@ Run the database migrations. This will add `timezone` and `detect_timezone` colu
 php artisan migrate
 ```
 
-### Update User model
+#### Update User model
 
 Add `SEOService2020\Timezone\Traits\HasTimezone` trait to your `user` model:
 
@@ -60,8 +64,7 @@ Add `SEOService2020\Timezone\Traits\HasTimezone` trait to your `user` model:
 use HasTimezone;
 ```
 
-If you use package default attributes setup, `User` model has attribute `detect_timezone`.
-If you wish to work with it, you can add boolean cast for your `User` model:
+If you wish to work with `detect_timezone` attribute directly, you can add boolean cast for your `User` model:
 
 ```php
 protected $casts = [
@@ -69,11 +72,11 @@ protected $casts = [
 ];
 ```
 
-If you wish to use per-user timezone overwriting, you can add `detect_timezone` attribute to your `User` model fillable property:
+If you wish to set per-user timezone overwriting at user creation time, you can add `detect_timezone` attribute to your `User` model fillable property:
 
 ```php
 protected $fillable = [
-        'detect_timezone',
+    'detect_timezone',
     ];
 ```
 
