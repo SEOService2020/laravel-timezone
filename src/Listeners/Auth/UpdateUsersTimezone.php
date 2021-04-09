@@ -4,7 +4,6 @@ namespace SEOService2020\Timezone\Listeners\Auth;
 
 use Illuminate\Auth\Events\Login;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Schema;
 
 use Laravel\Passport\Events\AccessTokenCreated;
 use SEOService2020\Timezone\Traits\FlashesMessage;
