@@ -1,22 +1,22 @@
 # Laravel Timezone
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/jamesmills/laravel-timezone.svg?style=flat-square)](https://packagist.org/packages/jamesmills/laravel-timezone)
-[![Total Downloads](https://img.shields.io/packagist/dt/jamesmills/laravel-timezone.svg?style=flat-square)](https://packagist.org/packages/jamesmills/laravel-timezone)
-[![Licence](https://img.shields.io/packagist/l/jamesmills/laravel-timezone.svg?style=flat-square)](https://packagist.org/packages/jamesmills/laravel-timezone)
-[![Quality Score](https://img.shields.io/scrutinizer/g/jamesmills/laravel-timezone.svg?style=flat-square)](https://scrutinizer-ci.com/g/jamesmills/laravel-timezone)
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/seoservice2020/laravel-timezone.svg?style=flat-square)](https://packagist.org/packages/seoservice2020/laravel-timezone)
+[![Total Downloads](https://img.shields.io/packagist/dt/seoservice2020/laravel-timezone.svg?style=flat-square)](https://packagist.org/packages/seoservice2020/laravel-timezone)
+[![Licence](https://img.shields.io/packagist/l/seoservice2020/laravel-timezone.svg?style=flat-square)](https://packagist.org/packages/seoservice2020/laravel-timezone)
+[![Quality Score](https://img.shields.io/scrutinizer/g/seoservice2020/laravel-timezone.svg?style=flat-square)](https://scrutinizer-ci.com/g/seoservice2020/laravel-timezone)
 [![StyleCI](https://github.styleci.io/repos/142882574/shield?branch=master)](https://github.styleci.io/repos/142882574)
-[![Buy us a tree](https://img.shields.io/badge/treeware-%F0%9F%8C%B3-lightgreen?style=flat-square)](https://plant.treeware.earth/jamesmills/laravel-timezone)
-[![Treeware (Trees)](https://img.shields.io/treeware/trees/jamesmills/laravel-timezone?style=flat-square)](https://plant.treeware.earth/jamesmills/laravel-timezone)
+[![Buy us a tree](https://img.shields.io/badge/treeware-%F0%9F%8C%B3-lightgreen?style=flat-square)](https://plant.treeware.earth/seoservice2020/laravel-timezone)
+[![Treeware (Trees)](https://img.shields.io/treeware/trees/seoservice2020/laravel-timezone?style=flat-square)](https://plant.treeware.earth/seoservice2020/laravel-timezone)
 
 An easy way to set a timezone for a user in your application and then show date/times to them in their local timezone.
 
 ## How does it work
 
-This package listens for the `\Illuminate\Auth\Events\Login` event and will then automatically set a `timezone` on your `user` model (stored in the database).
+This package listens for the `\Illuminate\Auth\Events\Login` event and will then automatically set a `timezone` on your `user` model (stored in the database). It decides whether to update user timezone or not according to user `detect_timezone` attribute, or, if not set, according to default value in config. For non-authorized routes, where auth user info is not accessible, package will use default timezone from its config.
 
 This package uses the [torann/geoip](http://lyften.com/projects/laravel-geoip/doc/) package which looks up the users location based on their IP address. The package also returns information like the users currency and users timezone. [You can configure this package separately if you require](#custom-configuration).
 
- ## How to use
+## How to use
 
 You can show dates to your user in their timezone by using
 
@@ -34,23 +34,55 @@ Or use our nice blade directive
 
 ## Installation
 
-Pull in the package using Composer
+### Pull in the package using Composer
 
-```
-composer require jamesmills/laravel-timezone
-```
-
-Publish database migrations
- 
-```
-php artisan vendor:publish --provider="JamesMills\LaravelTimezone\LaravelTimezoneServiceProvider" --tag=migrations
+```bash
+composer require seoservice2020/laravel-timezone
 ```
 
-Run the database migrations. This will add a `timezone` column to your `users` table.
+### Default timezone attributes location
 
+By default, timezone attributes placed into `users` table. If you wish to use package with this default, see instructions below.
+
+#### Publish database migrations
+
+```bash
+php artisan vendor:publish --provider="SEOService2020\Timezone\TimezoneServiceProvider" --tag=migrations
 ```
+
+Run the database migrations. This will add `timezone` and `detect_timezone` columns to your `users` table. Note that migration will be placed to default Laravel migrations folder, so if you use custom folder, you should move migration file to appropriate location.
+
+```bash
 php artisan migrate
 ```
+
+#### Update User model
+
+Add `SEOService2020\Timezone\Traits\HasTimezone` trait to your `user` model:
+
+```php
+use HasTimezone;
+```
+
+If you wish to work with `detect_timezone` attribute directly, you can add boolean cast for your `User` model:
+
+```php
+protected $casts = [
+  'detect_timezone' => 'boolean',
+];
+```
+
+If you wish to set per-user timezone overwriting at user creation time, you can add `detect_timezone` attribute to your `User` model fillable property:
+
+```php
+protected $fillable = [
+    'detect_timezone',
+    ];
+```
+
+### Custom timezone attributes location
+
+If you wish to use different location for `timezone` and `detect_timezone` attributes, e.g. `Profile` model, you should override `HasTimezone` trait and use overriden one in your `User` model.
 
 ## Examples
 
@@ -70,6 +102,14 @@ If you wish you can set a custom format and also include a nice version of the t
 {{ Timezone::convertToLocal($post->created_at, 'Y-m-d g:i', true) }}
 
 // 2018-07-04 3:32 New York, America
+```
+
+If you wish to further work with converted Carbon instance, you can use toLocal method:
+
+```php
+{{ Timezone::toLocal($post->created_at)->diffForHumans() }}
+
+// diff calculated relative to datetime with user-end timezone
 ```
 
 ### Using blade directive
@@ -106,7 +146,7 @@ $post = Post::create([
 Publishing the config file is optional.
 
 ```php
-php artisan vendor:publish --provider="JamesMills\LaravelTimezone\LaravelTimezoneServiceProvider" --tag=config
+php artisan vendor:publish --provider="SEOService2020\Timezone\TimezoneServiceProvider" --tag=config
 ```
 
 ### Flash Messages
@@ -125,7 +165,7 @@ To override this configuration, you just need to change the `flash` property ins
 
 ### Overwrite existing timezones in the database
 
-By default, the timezone will be overwritten at each login with the current user timezone. This behavior can be restricted to only update the timezone if it is blank by setting the `'overwrite' => false,` config option.
+User timezone will be overwritten at each login with the current user timezone if `detect_timezone` is set to true for this user. If this attribute is not set, by default, the timezone will be overwritten. This behavior can be restricted to only update the timezone if it is blank by setting the `'overwrite' => false,` config option.
 
 ### Default Format
 
@@ -155,8 +195,8 @@ Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 
 This package is 100% free and open-source, under the MIT license. Use it however you want.
 
-This package is [Treeware](https://treeware.earth). If you use it in production, then we ask that you [**buy the world a tree**](https://plant.treeware.earth/jamesmills/laravel-timezone) to thank us for our work. By contributing to the Treeware forest you’ll be creating employment for local families and restoring wildlife habitats.
+This package is [Treeware](https://treeware.earth). If you use it in production, then we ask that you [**buy the world a tree**](https://plant.treeware.earth/seoservice2020/laravel-timezone) to thank us for our work. By contributing to the Treeware forest you’ll be creating employment for local families and restoring wildlife habitats.
 
 ## Issues
 
-If you receive a message like `This cache store does not support tagging` this is because the `torann/geoip` package requires a caching driver which supports tagging and you probably have your application set to use the `file` cache driver. You can [publish the config file](#custom-configuration) for the `torann/geoip` package and set `'cache_tags' => null,` to solve this. [Read more about this issue here](https://github.com/jamesmills/laravel-timezone/issues/4#issuecomment-494648925).
+If you receive a message like `This cache store does not support tagging` this is because the `torann/geoip` package requires a caching driver which supports tagging and you probably have your application set to use the `file` cache driver. You can [publish the config file](#custom-configuration) for the `torann/geoip` package and set `'cache_tags' => null,` to solve this. [Read more about this issue here](https://github.com/seoservice2020/laravel-timezone/issues/4#issuecomment-494648925).

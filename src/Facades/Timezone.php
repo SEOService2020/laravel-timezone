@@ -1,6 +1,6 @@
 <?php
 
-namespace JamesMills\LaravelTimezone\Facades;
+namespace SEOService2020\Timezone\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
