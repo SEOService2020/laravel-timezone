@@ -6,6 +6,19 @@ use Carbon\Carbon;
 
 class Timezone
 {
+    protected function getTimezone()
+    {
+        // TODO(sergotail): use geoip timezone suggestion for non-authorized users too
+        // (make it configurable)
+        $user = auth()->user();
+
+        if ($user) {
+            return $user->getTimezone();
+        }
+
+        return config('timezone.default', null) ?? config('app.timezone');
+    }
+
     protected function formatTimezone(Carbon $date): string
     {
         $timezone = $date->format('e');
@@ -24,13 +37,7 @@ class Timezone
             return null;
         }
 
-        // TODO(sergotail): use geoip timezone suggestion for non-authorized users too
-        // (make it configurable)
-        $timezone = auth()->user()->getTimezone() ??
-            config('timezone.default', null) ??
-            config('app.timezone');
-
-        return $date->copy()->setTimezone($timezone);
+        return $date->copy()->setTimezone($this->getTimezone());
     }
 
     public function convertToLocal(
@@ -55,6 +62,6 @@ class Timezone
 
     public function convertFromLocal($date): Carbon
     {
-        return Carbon::parse($date, auth()->user()->getTimezone())->setTimezone('UTC');
+        return Carbon::parse($date, $this->getTimezone())->setTimezone('UTC');
     }
 }
